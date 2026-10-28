@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Order Placed - Frost in Fire{% endblock %}
+
+{% block content %}
+<div class="container py-5 text-center">
+  <div class="card border-0 shadow-sm rounded-4 p-4 mx-auto" style="max-width: 500px;">
+    <div style="font-size: 3.5rem;">🔥</div>
+    <h3 class="fw-bold mt-2">Order Confirmed!</h3>
+    <p class="text-muted">Order Code: <strong class="text-danger">{{ order.order_code }}</strong></p>
+    
+    <div class="alert alert-light border text-start small">
+      <strong>Customer:</strong> {{ order.customer_name }}<br>
+      <strong>Deliver To:</strong> {{ order.delivery_address }} ({{ order.pincode }})<br>
+      <strong>Payable on Delivery:</strong> Rs. {{ order.final_amount }}
+    </div>
+
+    <p class="small text-muted">Your order details have been forwarded to the kitchen via WhatsApp.</p>
+    <a href="{{ url_for('public_bp.index') }}" class="btn btn-frost-fire mt-2">Order More Snacks</a>
+  </div>
+</div>
+{% endblock %}

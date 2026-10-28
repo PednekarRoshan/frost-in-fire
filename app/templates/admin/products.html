@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% block title %}Manage Catalog - Frost in Fire{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="fw-bold mb-0">Product Catalog Management</h3>
+    <a href="{{ url_for('admin_bp.dashboard') }}" class="btn btn-outline-secondary">Back to Dashboard</a>
+  </div>
+
+  <div class="row g-4">
+    <!-- ADD PRODUCT FORM -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 p-3">
+        <h5 class="fw-bold mb-3">Add Frozen Snack</h5>
+        <form method="POST" action="{{ url_for('admin_bp.products') }}" enctype="multipart/form-data">
+          
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Snack Name</label>
+            <input type="text" name="name" class="form-control" required placeholder="e.g. Cheese Balls">
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Category</label>
+            <select name="category" class="form-select">
+              <option value="Veg">Pure Veg</option>
+              <option value="Non-Veg">Non-Veg</option>
+            </select>
+          </div>
+
+          <div class="row g-2 mb-2">
+            <div class="col-6">
+              <label class="form-label small fw-bold">MRP (Rs.)</label>
+              <input type="number" step="0.5" name="mrp" class="form-control" required placeholder="200">
+            </div>
+            <div class="col-6">
+              <label class="form-label small fw-bold">Selling Price</label>
+              <input type="number" step="0.5" name="selling_price" class="form-control" required placeholder="160">
+            </div>
+          </div>
+
+          <div class="mb-2">
+            <label class="form-label small fw-bold">Upload Photo (PC or Phone Camera)</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+            <div class="form-text small">Instant capture from smartphone supported.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label small fw-bold">Short Description</label>
+            <textarea name="description" class="form-control" rows="2" placeholder="Taste profile, pcs count, cooking mode"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-frost-fire w-100 py-2 fw-bold">Add to Catalog</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div class="col-lg-8">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+          <h5 class="fw-bold mb-0">Active Items ({{ products|length }})</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Pricing</th>
+                <th>Discount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in products %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <img src="{{ p.image_url }}" alt="{{ p.name }}" class="rounded me-2" style="width: 48px; height: 48px; object-fit: cover;">
+                    <div class="fw-bold text-dark">{{ p.name }}</div>
+                  </div>
+                </td>
+                <td>
+                  <span class="food-badge {{ 'veg' if p.category == 'Veg' else 'non-veg' }} me-1">
+                    <span class="badge-dot"></span>
+                  </span>
+                  {{ p.category }}
+                </td>
+                <td>
+                  <div class="fw-bold">Rs. {{ p.selling_price }}</div>
+                  <div class="text-muted small text-decoration-line-through">Rs. {{ p.mrp }}</div>
+                </td>
+                <td><span class="badge bg-success">{{ p.discount_percent }}% OFF</span></td>
+                <td>
+                  <form method="POST" action="{{ url_for('admin_bp.delete_product', product_id=p.id) }}" onsubmit="return confirm('Are you sure you want to delete this snack?');">
+                    <button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                  </form>
+                </td>
+              </tr>
+              {% else %}
+              <tr><td colspan="5" class="text-center py-4 text-muted">No items found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

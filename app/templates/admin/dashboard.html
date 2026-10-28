@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard - Frost in Fire{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h3 class="fw-bold mb-0">Operational Dashboard</h3>
+      <div class="text-muted small">Current WhatsApp Router: <strong class="text-success">+{{ router_phone }}</strong></div>
+    </div>
+    <div>
+      <a href="{{ url_for('admin_bp.products') }}" class="btn btn-outline-dark me-2">Products</a>
+      <a href="{{ url_for('admin_bp.orders') }}" class="btn btn-frost-fire me-2">Orders Board</a>
+      <a href="{{ url_for('admin_bp.logout') }}" class="btn btn-danger btn-sm">Sign Out</a>
+    </div>
+  </div>
+
+  <!-- METRICS CARDS -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 p-3">
+        <div class="text-muted small">Pending Fulfillment</div>
+        <div class="fs-2 fw-bold text-danger">{{ pending_orders }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 p-3">
+        <div class="text-muted small">Total Orders Logged</div>
+        <div class="fs-2 fw-bold text-primary">{{ total_orders }}</div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card border-0 shadow-sm rounded-3 p-3">
+        <div class="text-muted small">Active Products in Freezer</div>
+        <div class="fs-2 fw-bold text-success">{{ total_products }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHATSAPP NUMBER SETTINGS CARD -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4">
+    <div class="card-body p-4">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <h5 class="fw-bold mb-1"><i class="bi bi-whatsapp text-success me-2"></i>Order Routing WhatsApp Number</h5>
+          <p class="text-muted small mb-0">
+            Incoming customer orders from checkout will open this WhatsApp chat. Format: Country Code + Phone (e.g. <code>919876543210</code>).
+          </p>
+        </div>
+        <div class="col-lg-5 mt-3 mt-lg-0">
+          <form method="POST" action="{{ url_for('admin_bp.update_phone') }}" class="d-flex gap-2">
+            <input type="text" name="phone" class="form-control" value="{{ router_phone }}" required placeholder="919876543210">
+            <button type="submit" class="btn btn-success fw-bold text-nowrap">Save Number</button>
+          </form>
+          <div class="mt-2 text-end">
+            <a href="https://wa.me/{{ router_phone }}?text=Frost%20in%20Fire%20Routing%20Test" target="_blank" class="small text-decoration-none text-muted">
+              <i class="bi bi-box-arrow-up-right me-1"></i>Test WhatsApp Link
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RECENT ORDERS SNAPSHOT -->
+  <div class="card border-0 shadow-sm rounded-3">
+    <div class="card-header bg-white py-3">
+      <h5 class="fw-bold mb-0">Recent Order Submissions</h5>
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Order Code</th>
+            <th>Customer</th>
+            <th>Pincode</th>
+            <th>Payable</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for order in recent_orders %}
+          <tr>
+            <td class="fw-bold">{{ order.order_code }}</td>
+            <td>{{ order.customer_name }} ({{ order.customer_phone }})</td>
+            <td>{{ order.pincode }}</td>
+            <td class="fw-bold text-danger">Rs. {{ order.final_amount }}</td>
+            <td><span class="badge badge-status-{{ order.status }}">{{ order.status }}</span></td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="5" class="text-center py-4 text-muted">No orders placed yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

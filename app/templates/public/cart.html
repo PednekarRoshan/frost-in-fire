@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block title %}Freezer Bag & WhatsApp Checkout - Frost in Fire{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row g-4">
+    
+    <!-- LEFT: CART ITEMS LIST -->
+    <div class="col-lg-7">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h4 class="fw-bold mb-0">Your Freezer Bag</h4>
+        <button class="btn btn-sm btn-outline-danger" onclick="clearCart()">Empty Cart</button>
+      </div>
+      <div id="cart-items-container">
+        <!-- Rendered dynamically by cart.js -->
+      </div>
+    </div>
+
+    <!-- RIGHT: SAVINGS BREAKDOWN & GUEST CHECKOUT -->
+    <div class="col-lg-5" id="cart-summary-container" style="display:none;">
+      
+      <!-- SAVINGS CELEBRATION BANNER -->
+      <div id="sum-celebration-banner" class="savings-banner mb-3 shadow-sm text-center" style="display:none;">
+        <i class="bi bi-stars fs-5 me-1 text-success"></i>
+        <span id="sum-savings-text">You are saving Rs. 0.00 on this order!</span>
+      </div>
+
+      <!-- PRICE BREAKDOWN CARD -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-3">Order Summary</h5>
+          
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted">Original MRP Total:</span>
+            <span class="text-decoration-line-through text-muted" id="sum-total-mrp">Rs. 0.00</span>
+          </div>
+
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-success fw-bold">Frost Discount Savings:</span>
+            <span class="text-success fw-bold" id="sum-discount-savings">- Rs. 0.00</span>
+          </div>
+
+          <hr>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fs-5 fw-bold text-dark">Final Amount to Pay:</span>
+            <span class="fs-4 fw-black fw-bold text-danger" id="sum-final-amount">Rs. 0.00</span>
+          </div>
+          <div class="small text-muted mt-1">* Payment settled directly with store owner on WhatsApp</div>
+        </div>
+      </div>
+
+      <!-- GUEST CHECKOUT FORM (NO PASSWORDS, NO OTPS) -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-body p-4">
+          <h5 class="fw-bold mb-3">Guest Delivery Details</h5>
+          
+          <form onsubmit="handleWhatsAppCheckout(event, '{{ TARGET_PINCODE }}')">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Your Full Name *</label>
+              <input type="text" class="form-control" id="cust_name" required placeholder="e.g. Rahul Sharma">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">WhatsApp Mobile Number *</label>
+              <input type="tel" class="form-control" id="cust_phone" required placeholder="e.g. 9876543210">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Full Delivery Address (Flat / Wing / Building) *</label>
+              <textarea class="form-control" id="cust_address" rows="2" required placeholder="e.g. Flat 402, Sunshine Heights, Main Road"></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Pincode *</label>
+              <input type="text" class="form-control fw-bold" id="cust_pincode" value="{{ TARGET_PINCODE }}" required>
+              <div class="form-text small text-danger">Exclusively delivering to Pincode: {{ TARGET_PINCODE }}</div>
+            </div>
+
+            <div class="mb-4">
+              <label class="form-label small fw-bold">Cooking / Delivery Instructions (Optional)</label>
+              <input type="text" class="form-control" id="cust_notes" placeholder="e.g. Extra spicy dip, call before arriving">
+            </div>
+
+            <button type="submit" id="btn-place-order" class="btn btn-frost-fire w-100 py-3 fw-bold fs-6">
+              <i class="bi bi-whatsapp me-2 fs-5"></i> Place Order via WhatsApp
+            </button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
