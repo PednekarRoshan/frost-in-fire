@@ -99,11 +99,11 @@ def seed_database():
 
         db.session.commit()
 
+# Call seed_database() unconditionally so Gunicorn creates the tables on Render
+seed_database()
+
 if __name__ == '__main__':
-    seed_database()
     print("\n=======================================================")
     print(" FROST IN FIRE Server Running!")
-    print(" Access on PC:      http://127.0.0.1:5000")
-    print(" Admin Portal:      http://127.0.0.1:5000/admin/login")
     print("=======================================================\n")
     app.run(host='0.0.0.0', port=5000, debug=True)
