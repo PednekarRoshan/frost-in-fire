@@ -99,7 +99,7 @@ def seed_database():
 
         db.session.commit()
 
-# Call seed_database() unconditionally so Gunicorn creates the tables on Render
+# --- Run seeding immediately when Gunicorn loads this file ---
 seed_database()
 
 if __name__ == '__main__':
